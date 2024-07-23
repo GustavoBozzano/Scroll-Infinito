@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll Infinito</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .item {
+        background: #f3f3f3;
+        margin: 10px;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <!-- Contenido inicial -->
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+    </div>
+
+    <script>
+      let counter = 6; // Contador para los nuevos elementos
+
+      // Función para agregar más contenido
+      function loadMoreContent() {
+        const content = document.getElementById('content');
+
+        for (let i = 0; i < 5; i++) {
+          // Agregamos 5 nuevos items cada vez
+          const item = document.createElement('div');
+          item.className = 'item';
+          item.textContent = 'Item ' + counter++;
+          content.appendChild(item);
+        }
+      }
+
+      // Función que verifica si estamos cerca del final de la página
+      function checkScrollPosition() {
+        const { scrollTop, scrollHeight, clientHeight } =
+          document.documentElement;
+
+        // Si el usuario está a menos de 100px del final de la página
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+          loadMoreContent();
+        }
+      }
+
+      // Escuchamos el evento scroll
+      window.addEventListener('scroll', checkScrollPosition);
+
+      // Inicialmente cargar más contenido si la página es corta
+      window.addEventListener('DOMContentLoaded', (event) => {
+        loadMoreContent();
+      });
+    </script>
+  </body>
+</html>
