@@ -45,6 +45,15 @@
         }
       }
 
+      // Debounce function to limit the rate at which a function is executed
+      function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+      }
+
       // Función que verifica si estamos cerca del final de la página
       function checkScrollPosition() {
         const { scrollTop, scrollHeight, clientHeight } =
@@ -56,12 +65,18 @@
         }
       }
 
-      // Escuchamos el evento scroll
-      window.addEventListener('scroll', checkScrollPosition);
+      // Escuchamos el evento scroll con debounce para mejor rendimiento
+      window.addEventListener('scroll', debounce(checkScrollPosition, 100));
 
       // Inicialmente cargar más contenido si la página es corta
       window.addEventListener('DOMContentLoaded', (event) => {
-        loadMoreContent();
+        // Cargar más contenido hasta que el scrollHeight sea mayor que clientHeight
+        while (
+          document.documentElement.scrollHeight <=
+          document.documentElement.clientHeight
+        ) {
+          loadMoreContent();
+        }
       });
     </script>
   </body>
